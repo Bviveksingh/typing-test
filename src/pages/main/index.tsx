@@ -7,16 +7,16 @@ import { para1 } from '../../paragraphs';
 
 const Main : FC = () => {
     const [startTimer, setStartTimer] = useState<boolean>(false);
-    const [inputVal, setInputVal] = useState<string>();
+    const [inputVal, setInputVal] = useState<string>('');
     const [displayVal, setDisplayVal] = useState<string>(para1);
     const splitToArr = displayVal.split('');
     const [newArr, setNewArr] = useState<JSX.Element[]>([]);
     const [inpBoxSplit, setInpBoxSplit] = useState<string[]>([]);
+    const [wordsPerMin, setWordsPerMin] = useState<number | undefined>();
+    const [minutes, setMinutes] = useState<number>(1);
     const doEverything = (e: any) => {
         setInputVal(e.target.value);
-    }
-    // console.log("Input box split", inpBoxSplit[inpBoxSplit.length-1]);
-    // console.log("Split array", splitToArr[inpBoxSplit.length -1]);
+    };
 
     
     const compareStuff = () => {
@@ -31,7 +31,32 @@ const Main : FC = () => {
                 copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1], "normalText");
                 setNewArr(copyArr);
             }
+    };
+
+    const computeResult = () => {
+        const result = (inputVal.length / 5) / minutes;
+        setWordsPerMin(result);
     }
+
+    const resetTest = () => {
+        // setStartTimer(!startTimer);
+        setInputVal('');
+        setInpBoxSplit([]);
+        setWordsPerMin(undefined);
+    }
+    
+
+
+    const displayResult = () => {
+        return(
+            <div>
+                <p>The words per minute written: {wordsPerMin}</p>
+                <button onClick={() => resetTest()}>Reset</button>
+            </div>
+        )
+    };
+
+    const closeTimer = () => setStartTimer(false);
 
     useEffect(() => {
         if(inputVal){
@@ -43,7 +68,7 @@ const Main : FC = () => {
 
     useEffect(() => {
         if(inputVal){
-                setStartTimer(true);
+            setStartTimer(true);
         }
     },[inputVal]);
 
@@ -53,12 +78,19 @@ const Main : FC = () => {
 
     useEffect(() => {
         setNewArr(splitToArr.map(val => (AddSpan(val, "normalText"))));
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if(!startTimer && inpBoxSplit.length > 0){
+            computeResult();
+        }
+    },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
-            <Timer startTimer={startTimer}/>
+            <Timer startTimer={startTimer} closeTimer={closeTimer}/>
             <Paragraph value={newArr}/>
             <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
+            {!startTimer && inpBoxSplit.length > 0 && displayResult() }
         </div>
     )
 }
