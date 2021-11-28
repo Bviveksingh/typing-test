@@ -2,12 +2,12 @@ import React, { FC, useEffect, useState } from 'react'
 
 interface TimerProps {
     startTimer: boolean;
-    closeTimer: () => void;
+    endTimerFunc: () => void;
 }
 
 const Timer : FC<TimerProps> = ({
     startTimer,
-    closeTimer
+    endTimerFunc
 }) => {
     const [ counter, setCounter ] = useState(10);
     useEffect(() => {
@@ -15,7 +15,8 @@ const Timer : FC<TimerProps> = ({
             setTimeout(() => setCounter(prevCount => prevCount - 1), 1000);
         }
         if(counter === 0){
-            closeTimer();
+            endTimerFunc();
+            setCounter(10);
         }
     }, [counter, startTimer]);
 

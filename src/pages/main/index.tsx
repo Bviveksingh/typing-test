@@ -7,6 +7,7 @@ import { para1 } from '../../paragraphs';
 
 const Main : FC = () => {
     const [startTimer, setStartTimer] = useState<boolean>(false);
+    const [endTimer, setEndTimer] = useState<boolean>(false);
     const [inputVal, setInputVal] = useState<string>('');
     const [displayVal, setDisplayVal] = useState<string>(para1);
     const splitToArr = displayVal.split('');
@@ -39,14 +40,12 @@ const Main : FC = () => {
     }
 
     const resetTest = () => {
-        // setStartTimer(!startTimer);
+        setEndTimer(false);
         setInputVal('');
         setInpBoxSplit([]);
         setWordsPerMin(undefined);
     }
     
-
-
     const displayResult = () => {
         return(
             <div>
@@ -56,7 +55,10 @@ const Main : FC = () => {
         )
     };
 
-    const closeTimer = () => setStartTimer(false);
+    const endTimerFunc = () => {
+        setStartTimer(false);
+        setEndTimer(true);
+    }
 
     useEffect(() => {
         if(inputVal){
@@ -87,10 +89,10 @@ const Main : FC = () => {
     },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
-            <Timer startTimer={startTimer} closeTimer={closeTimer}/>
+            <Timer startTimer={startTimer} endTimerFunc={endTimerFunc}/>
             <Paragraph value={newArr}/>
             <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
-            {!startTimer && inpBoxSplit.length > 0 && displayResult() }
+            {endTimer && displayResult()}
         </div>
     )
 }
