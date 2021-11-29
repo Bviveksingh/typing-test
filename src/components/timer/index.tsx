@@ -11,20 +11,16 @@ const Timer : FC<TimerProps> = ({
     endTimerFunc,
     timeInSeconds
 }) => {
-    const [ counterInSeconds, setCounterInSeconds ] = useState(timeInSeconds);
-    // const [secondTimerCount, setSecondTimerCount] = useState<number>(0);
-    // const [minuteTimerCount, setMinuteTimerCount] = useState<number>(0);
+    const [ counterInSeconds, setCounterInSeconds ] = useState<number>();
     const [readableFormat, setReadableFormat] = useState<string>();
-    // const returnReadableTimer = () => {
-    //     return { minuteTimerCount.toString().length === 1 ? "0" + minuteTimerCount : minuteTimerCount + 
-    //         secondTimerCount = secondTimerCount.toString().length === 1 ? "0" + secondTimerCount : secondTimerCount}
-    // }
+
+    console.log(readableFormat);
     useEffect(() => {
-        if(counterInSeconds > 0 && startTimer){
+        if(counterInSeconds as number > 0 && startTimer){
             setTimeout(() => {
-                setCounterInSeconds(prevCount => prevCount - 1);
-                let seconds : string | number = counterInSeconds % 60;
-                let minutes : string | number = Math.floor(counterInSeconds / 60);
+                setCounterInSeconds(prevCount => prevCount as number - 1);
+                let seconds : string | number = counterInSeconds as number % 60;
+                let minutes : string | number = Math.floor(counterInSeconds as number / 60);
                 minutes = minutes.toString().length === 1 ? "0" + minutes : minutes;
                 seconds = seconds.toString().length === 1 ? "0" + seconds : seconds;
                 setReadableFormat(minutes + ':' + seconds);
@@ -35,6 +31,10 @@ const Timer : FC<TimerProps> = ({
             setCounterInSeconds(timeInSeconds);
         }
     }, [counterInSeconds, startTimer]);
+
+    useEffect(() => {
+        setCounterInSeconds(timeInSeconds);
+    },[timeInSeconds]);
 
     return (
         <div>

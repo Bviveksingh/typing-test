@@ -17,12 +17,12 @@ const Main : FC = () => {
     const [minutes, setMinutes] = useState<number>(1);
     const [incorrectEntry, setIncorrectEntry] = useState<number>(0);
     const [accuracy, setAccuracy] = useState<number>(0);
-    const [timeInSeconds, setTimeInSeconds] = useState<number>(0);
+    const [timeInSeconds, setTimeInSeconds] = useState<number>();
     const doEverything = (e: any) => {
         setInputVal(e.target.value);
     };
 
-    
+    console.log(endTimer);
     const compareStuff = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
                 const copyArr = newArr.slice();
@@ -52,7 +52,7 @@ const Main : FC = () => {
         setWordsPerMin(undefined);
         setAccuracy(0);
         setIncorrectEntry(0);
-        setTimeInSeconds(0);
+        setTimeInSeconds(timeInSeconds);
     }
     
     const displayResult = () => {
@@ -98,7 +98,7 @@ const Main : FC = () => {
     },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
-            <Timer timeInSeconds={timeInSeconds} startTimer={startTimer} endTimerFunc={endTimerFunc}/>
+            <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/>
             <Paragraph value={newArr}/>
             <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
             <button onClick={() => setTimeInSeconds(60)}>1</button>
