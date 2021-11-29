@@ -17,6 +17,7 @@ const Main : FC = () => {
     const [minutes, setMinutes] = useState<number>(1);
     const [incorrectEntry, setIncorrectEntry] = useState<number>(0);
     const [accuracy, setAccuracy] = useState<number>(0);
+    const [timeInSeconds, setTimeInSeconds] = useState<number>(0);
     const doEverything = (e: any) => {
         setInputVal(e.target.value);
     };
@@ -38,9 +39,9 @@ const Main : FC = () => {
 
     const computeResult = () => {
         const result = (inputVal.length / 5) / minutes;
-        const percentage = ((inputVal.length - incorrectEntry) / inputVal.length) * 100;
+        const percentage = (((inputVal.length - incorrectEntry) / inputVal.length) * 100).toFixed(2);
         setWordsPerMin(result);
-        setAccuracy(percentage);
+        setAccuracy(parseFloat(percentage));
 
     }
 
@@ -51,6 +52,7 @@ const Main : FC = () => {
         setWordsPerMin(undefined);
         setAccuracy(0);
         setIncorrectEntry(0);
+        setTimeInSeconds(0);
     }
     
     const displayResult = () => {
@@ -67,7 +69,6 @@ const Main : FC = () => {
         setStartTimer(false);
         setEndTimer(true);
     }
-
     useEffect(() => {
         if(inputVal){
             const x =  inputVal.split('');
@@ -97,9 +98,12 @@ const Main : FC = () => {
     },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
-            <Timer startTimer={startTimer} endTimerFunc={endTimerFunc}/>
+            <Timer timeInSeconds={timeInSeconds} startTimer={startTimer} endTimerFunc={endTimerFunc}/>
             <Paragraph value={newArr}/>
             <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
+            <button onClick={() => setTimeInSeconds(60)}>1</button>
+            <button onClick={() => setTimeInSeconds(120)}>2</button>
+            <button onClick={() => setTimeInSeconds(180)}>3</button>
             {endTimer && displayResult()}
         </div>
     )
