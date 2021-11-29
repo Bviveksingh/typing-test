@@ -15,6 +15,8 @@ const Main : FC = () => {
     const [inpBoxSplit, setInpBoxSplit] = useState<string[]>([]);
     const [wordsPerMin, setWordsPerMin] = useState<number | undefined>();
     const [minutes, setMinutes] = useState<number>(1);
+    const [incorrectEntry, setIncorrectEntry] = useState<number>(0);
+    const [accuracy, setAccuracy] = useState<number>(0);
     const doEverything = (e: any) => {
         setInputVal(e.target.value);
     };
@@ -24,11 +26,11 @@ const Main : FC = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
                 const copyArr = newArr.slice();
                 copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1], "wrongText");
+                setIncorrectEntry(prevState => ++prevState);
                 setNewArr(copyArr);
             }
             else{
                 const copyArr = newArr.slice();
-                console.log("Correct");
                 copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1], "normalText");
                 setNewArr(copyArr);
             }
@@ -36,7 +38,10 @@ const Main : FC = () => {
 
     const computeResult = () => {
         const result = (inputVal.length / 5) / minutes;
+        const percentage = ((inputVal.length - incorrectEntry) / inputVal.length) * 100;
         setWordsPerMin(result);
+        setAccuracy(percentage);
+
     }
 
     const resetTest = () => {
@@ -44,12 +49,15 @@ const Main : FC = () => {
         setInputVal('');
         setInpBoxSplit([]);
         setWordsPerMin(undefined);
+        setAccuracy(0);
+        setIncorrectEntry(0);
     }
     
     const displayResult = () => {
         return(
             <div>
                 <p>The words per minute written: {wordsPerMin}</p>
+                <p>Percentage Accuracy: {accuracy}%</p>
                 <button onClick={() => resetTest()}>Reset</button>
             </div>
         )
