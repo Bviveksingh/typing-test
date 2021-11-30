@@ -18,6 +18,7 @@ const Main : FC = () => {
     const [incorrectEntry, setIncorrectEntry] = useState<number>(0);
     const [accuracy, setAccuracy] = useState<number>(0);
     const [timeInSeconds, setTimeInSeconds] = useState<number>();
+
     const doEverything = (e: any) => {
         setInputVal(e.target.value);
     };
@@ -52,7 +53,7 @@ const Main : FC = () => {
         setWordsPerMin(undefined);
         setAccuracy(0);
         setIncorrectEntry(0);
-        setTimeInSeconds(timeInSeconds);
+        setTimeInSeconds(0);
     }
     
     const displayResult = () => {
@@ -64,6 +65,10 @@ const Main : FC = () => {
             </div>
         )
     };
+
+    const setTime = (seconds: number) => {
+        setTimeInSeconds(seconds);
+    }
 
     const endTimerFunc = () => {
         setStartTimer(false);
@@ -85,7 +90,9 @@ const Main : FC = () => {
 
     useEffect(() => {
         compareStuff();
-    }, [inpBoxSplit]);  
+    }, [inpBoxSplit]);
+    
+
 
     useEffect(() => {
         setNewArr(splitToArr.map(val => (AddSpan(val, "normalText"))));
@@ -98,12 +105,11 @@ const Main : FC = () => {
     },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
-            <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/>
+            
+            {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
             <Paragraph value={newArr}/>
             <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
-            <button onClick={() => setTimeInSeconds(60)}>1</button>
-            <button onClick={() => setTimeInSeconds(120)}>2</button>
-            <button onClick={() => setTimeInSeconds(180)}>3</button>
+
             {endTimer && displayResult()}
         </div>
     )
@@ -114,6 +120,22 @@ const AddSpan = (value: string, nameClass: string) => {
         <>
             <span className={nameClass === "normalText" ? styles.normalText : styles.wrongText}>{value}</span>
         </>
+    )
+}
+
+interface MinuteButtonsProps{
+    setTimeInSeconds: (value: number) => void;
+}
+
+const MinuteButtons : FC<MinuteButtonsProps> = ({
+    setTimeInSeconds
+}) => {
+    return (
+        <div>
+            <button onClick={() => setTimeInSeconds(60)}>1</button>
+            <button onClick={() => setTimeInSeconds(120)}>2</button>
+            <button onClick={() => setTimeInSeconds(180)}>3</button>
+        </div>
     )
 }
 

@@ -12,8 +12,9 @@ const Timer : FC<TimerProps> = ({
     timeInSeconds
 }) => {
     const [ counterInSeconds, setCounterInSeconds ] = useState<number>();
-    const [readableFormat, setReadableFormat] = useState<string>();
+    const [ readableFormat, setReadableFormat ] = useState<string>();
 
+    console.log(timeInSeconds);
     console.log(readableFormat);
     useEffect(() => {
         if(counterInSeconds as number > 0 && startTimer){
@@ -29,8 +30,25 @@ const Timer : FC<TimerProps> = ({
         if(counterInSeconds === 0){
             endTimerFunc();
             setCounterInSeconds(timeInSeconds);
+
         }
-    }, [counterInSeconds, startTimer]);
+    }, [counterInSeconds, startTimer, timeInSeconds]);
+
+    useEffect(() => {
+        setCounterInSeconds(timeInSeconds);
+    },[timeInSeconds]);
+
+    useEffect(() => {
+        if(counterInSeconds){
+            let seconds : string | number = counterInSeconds as number % 60;
+            let minutes : string | number = Math.floor(counterInSeconds as number / 60);
+            minutes = minutes.toString().length === 1 ? "0" + minutes : minutes;
+            seconds = seconds.toString().length === 1 ? "0" + seconds : seconds;
+            setReadableFormat(minutes + ':' + seconds);
+        }
+    },[counterInSeconds])
+
+
 
     useEffect(() => {
         setCounterInSeconds(timeInSeconds);
@@ -38,8 +56,7 @@ const Timer : FC<TimerProps> = ({
 
     return (
         <div>
-            {/* { startTimer ? counter : "Timer done"} */}
-            {startTimer ? readableFormat : "Timer done"} 
+            {readableFormat} 
         </div>
     )
 }
