@@ -17,11 +17,13 @@ const Main : FC = () => {
     const [minutes, setMinutes] = useState<number>(1);
     const [incorrectEntry, setIncorrectEntry] = useState<number>(0);
     const [accuracy, setAccuracy] = useState<number>(0);
+    const [timeInSeconds, setTimeInSeconds] = useState<number>();
+
     const doEverything = (e: any) => {
         setInputVal(e.target.value);
     };
 
-    
+    console.log(endTimer);
     const compareStuff = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
                 const copyArr = newArr.slice();
@@ -38,9 +40,9 @@ const Main : FC = () => {
 
     const computeResult = () => {
         const result = (inputVal.length / 5) / minutes;
-        const percentage = ((inputVal.length - incorrectEntry) / inputVal.length) * 100;
+        const percentage = (((inputVal.length - incorrectEntry) / inputVal.length) * 100).toFixed(2);
         setWordsPerMin(result);
-        setAccuracy(percentage);
+        setAccuracy(parseFloat(percentage));
 
     }
 
@@ -51,6 +53,7 @@ const Main : FC = () => {
         setWordsPerMin(undefined);
         setAccuracy(0);
         setIncorrectEntry(0);
+        setTimeInSeconds(0);
     }
     
     const displayResult = () => {
@@ -63,11 +66,14 @@ const Main : FC = () => {
         )
     };
 
+    const setTime = (seconds: number) => {
+        setTimeInSeconds(seconds);
+    }
+
     const endTimerFunc = () => {
         setStartTimer(false);
         setEndTimer(true);
     }
-
     useEffect(() => {
         if(inputVal){
             const x =  inputVal.split('');
@@ -84,7 +90,9 @@ const Main : FC = () => {
 
     useEffect(() => {
         compareStuff();
-    }, [inpBoxSplit]);  
+    }, [inpBoxSplit]);
+    
+
 
     useEffect(() => {
         setNewArr(splitToArr.map(val => (AddSpan(val, "normalText"))));
@@ -97,9 +105,11 @@ const Main : FC = () => {
     },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
-            <Timer startTimer={startTimer} endTimerFunc={endTimerFunc}/>
+            
+            {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
             <Paragraph value={newArr}/>
             <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
+
             {endTimer && displayResult()}
         </div>
     )
@@ -110,6 +120,22 @@ const AddSpan = (value: string, nameClass: string) => {
         <>
             <span className={nameClass === "normalText" ? styles.normalText : styles.wrongText}>{value}</span>
         </>
+    )
+}
+
+interface MinuteButtonsProps{
+    setTimeInSeconds: (value: number) => void;
+}
+
+const MinuteButtons : FC<MinuteButtonsProps> = ({
+    setTimeInSeconds
+}) => {
+    return (
+        <div>
+            <button onClick={() => setTimeInSeconds(60)}>1</button>
+            <button onClick={() => setTimeInSeconds(120)}>2</button>
+            <button onClick={() => setTimeInSeconds(180)}>3</button>
+        </div>
     )
 }
 
