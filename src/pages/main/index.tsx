@@ -89,7 +89,7 @@ const Main : FC = () => {
     },[inputVal]);
 
     useEffect(() => {
-        if(inputVal){
+        if(inputVal && !endTimer){
             setStartTimer(true);
         }
     },[inputVal]);
@@ -111,10 +111,6 @@ const Main : FC = () => {
     }, [displayVal]);
 
     useEffect(() => {
-        
-    });
-
-    useEffect(() => {
         setNewArr(splitToArr.map(val => (AddSpan(val, "normalText"))));
     },[splitToArr]);
 
@@ -129,7 +125,7 @@ const Main : FC = () => {
             {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
             <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/> 
             {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}
-            <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
+            {!endTimer && <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>}
 
             {endTimer && displayResult()}
         </div>
