@@ -39,14 +39,13 @@ const Timer : FC<TimerProps> = ({
     },[timeInSeconds]);
 
     useEffect(() => {
-        if(counterInSeconds){
             let seconds : string | number = counterInSeconds as number % 60;
             let minutes : string | number = Math.floor(counterInSeconds as number / 60);
             minutes = minutes.toString().length === 1 ? "0" + minutes : minutes;
             seconds = seconds.toString().length === 1 ? "0" + seconds : seconds;
             setReadableFormat(minutes + ':' + seconds);
-        }
-    },[counterInSeconds])
+        
+    },[counterInSeconds]);
 
 
 
@@ -56,7 +55,7 @@ const Timer : FC<TimerProps> = ({
 
     return (
         <div>
-            {readableFormat} 
+            {startTimer ? readableFormat : 'Timer is set, type to trigger timer'} 
         </div>
     )
 }

@@ -3,14 +3,14 @@ import Paragraph from '../../components/paragraph';
 import styles from './main.module.css';
 import Timer from '../../components/timer';
 import InputBox from '../../components/inputBox';
-import { para1 } from '../../paragraphs';
+import { paragraphs } from '../../paragraphs';
 
 const Main : FC = () => {
     const [startTimer, setStartTimer] = useState<boolean>(false);
     const [endTimer, setEndTimer] = useState<boolean>(false);
     const [inputVal, setInputVal] = useState<string>('');
-    const [displayVal, setDisplayVal] = useState<string>(para1);
-    const splitToArr = displayVal.split('');
+    const [displayVal, setDisplayVal] = useState<string>('');
+    const [splitToArr, setSplitToArr] = useState<string[]>([]);
     const [newArr, setNewArr] = useState<JSX.Element[]>([]);
     const [inpBoxSplit, setInpBoxSplit] = useState<string[]>([]);
     const [wordsPerMin, setWordsPerMin] = useState<number | undefined>();
@@ -19,11 +19,12 @@ const Main : FC = () => {
     const [accuracy, setAccuracy] = useState<number>(0);
     const [timeInSeconds, setTimeInSeconds] = useState<number>();
 
+    const [difficultyLevel, setDifficultyLevel] = useState<number | undefined>();
+
     const doEverything = (e: any) => {
         setInputVal(e.target.value);
     };
-
-    console.log(endTimer);
+    
     const compareStuff = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
                 const copyArr = newArr.slice();
@@ -55,6 +56,7 @@ const Main : FC = () => {
         setIncorrectEntry(0);
         setTimeInSeconds(0);
     }
+
     
     const displayResult = () => {
         return(
@@ -68,6 +70,10 @@ const Main : FC = () => {
 
     const setTime = (seconds: number) => {
         setTimeInSeconds(seconds);
+    }
+
+    const setDifficulty = (value: number) => {
+        setDifficultyLevel(value);
     }
 
     const endTimerFunc = () => {
@@ -91,12 +97,26 @@ const Main : FC = () => {
     useEffect(() => {
         compareStuff();
     }, [inpBoxSplit]);
+
+    useEffect(() => {
+        setDisplayVal(paragraphs[difficultyLevel as number]);
+    },[difficultyLevel])
     
 
 
     useEffect(() => {
+        if(displayVal){
+            setSplitToArr(displayVal.split(''));
+        }
+    }, [displayVal]);
+
+    useEffect(() => {
+        
+    });
+
+    useEffect(() => {
         setNewArr(splitToArr.map(val => (AddSpan(val, "normalText"))));
-    }, []);
+    },[splitToArr]);
 
     useEffect(() => {
         if(!startTimer && inpBoxSplit.length > 0){
@@ -107,7 +127,8 @@ const Main : FC = () => {
         <div className={styles.container}>
             
             {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
-            <Paragraph value={newArr}/>
+            <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/> 
+            {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}
             <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>
 
             {endTimer && displayResult()}
@@ -126,6 +147,23 @@ const AddSpan = (value: string, nameClass: string) => {
 interface MinuteButtonsProps{
     setTimeInSeconds: (value: number) => void;
 }
+
+interface DifficultyLevelButtonsProps{
+    setDifficultyLevel: (value: number) => void;
+}
+
+
+const DifficultyLevelButtons : FC<DifficultyLevelButtonsProps> = ({
+    setDifficultyLevel
+}) => {
+    return(
+        <div>
+         <button onClick={() => setDifficultyLevel(0)}>Easy</button>
+         <button onClick={() => setDifficultyLevel(1)}>Medium</button>
+         <button onClick={() => setDifficultyLevel(2)}>Difficult</button>
+        </div>
+    )
+} ;
 
 const MinuteButtons : FC<MinuteButtonsProps> = ({
     setTimeInSeconds
