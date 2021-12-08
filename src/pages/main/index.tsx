@@ -8,6 +8,7 @@ import { paragraphs } from '../../paragraphs';
 const Main : FC = () => {
     const [startTimer, setStartTimer] = useState<boolean>(false);
     const [endTimer, setEndTimer] = useState<boolean>(false);
+    const [eligibleToStart, setElegibleToStart] = useState<boolean>(false);
     const [inputVal, setInputVal] = useState<string>('');
     const [displayVal, setDisplayVal] = useState<string>('');
     const [splitToArr, setSplitToArr] = useState<string[]>([]);
@@ -55,6 +56,9 @@ const Main : FC = () => {
         setAccuracy(0);
         setIncorrectEntry(0);
         setTimeInSeconds(0);
+        setElegibleToStart(false);
+        setDisplayVal('');
+        setSplitToArr([]);
     }
 
     
@@ -74,6 +78,7 @@ const Main : FC = () => {
 
     const setDifficulty = (value: number) => {
         setDifficultyLevel(value);
+        setDisplayVal(paragraphs[value]);
     }
 
     const endTimerFunc = () => {
@@ -98,11 +103,12 @@ const Main : FC = () => {
         compareStuff();
     }, [inpBoxSplit]);
 
+    //Show the input box only when the user has set the timer and difficulty level
     useEffect(() => {
-        setDisplayVal(paragraphs[difficultyLevel as number]);
-    },[difficultyLevel])
-    
-
+        if(timeInSeconds && newArr.length > 0){
+            setElegibleToStart(true);
+        }
+    },[timeInSeconds,newArr]);
 
     useEffect(() => {
         if(displayVal){
@@ -121,12 +127,10 @@ const Main : FC = () => {
     },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
-            
             {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
             <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/> 
             {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}
-            {!endTimer && <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>}
-
+            {!endTimer && eligibleToStart && <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>}
             {endTimer && displayResult()}
         </div>
     )
@@ -166,7 +170,7 @@ const MinuteButtons : FC<MinuteButtonsProps> = ({
 }) => {
     return (
         <div>
-            <button onClick={() => setTimeInSeconds(60)}>1</button>
+            <button onClick={() => setTimeInSeconds(10)}>1</button>
             <button onClick={() => setTimeInSeconds(120)}>2</button>
             <button onClick={() => setTimeInSeconds(180)}>3</button>
         </div>
