@@ -4,6 +4,8 @@ import styles from './main.module.css';
 import Timer from '../../components/timer';
 import InputBox from '../../components/inputBox';
 import { paragraphs } from '../../paragraphs';
+import DifficultyLevelButtons from '../../components/difficultyLevelButtons';
+import MinuteButtons from '../../components/setTimerButtons';
 
 const Main : FC = () => {
     const [startTimer, setStartTimer] = useState<boolean>(false);
@@ -142,39 +144,6 @@ const AddSpan = (value: string, index: number, nameClass: string) => {
         <>
             <span key={index} className={nameClass === "normalText" ? styles.normalText : styles.wrongText}>{value}</span>
         </>
-    )
-}
-
-interface MinuteButtonsProps{
-    setTimeInSeconds: (value: number) => void;
-}
-
-interface DifficultyLevelButtonsProps{
-    setDifficultyLevel: (value: number) => void;
-}
-
-
-const DifficultyLevelButtons : FC<DifficultyLevelButtonsProps> = ({
-    setDifficultyLevel
-}) => {
-    return(
-        <div>
-         <button onClick={() => setDifficultyLevel(0)}>Easy</button>
-         <button onClick={() => setDifficultyLevel(1)}>Medium</button>
-         <button onClick={() => setDifficultyLevel(2)}>Difficult</button>
-        </div>
-    )
-} ;
-
-const MinuteButtons : FC<MinuteButtonsProps> = ({
-    setTimeInSeconds
-}) => {
-    return (
-        <div>
-            <button onClick={() => setTimeInSeconds(10)}>1</button>
-            <button onClick={() => setTimeInSeconds(120)}>2</button>
-            <button onClick={() => setTimeInSeconds(180)}>3</button>
-        </div>
     )
 }
 
