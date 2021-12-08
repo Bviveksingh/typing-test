@@ -29,13 +29,13 @@ const Main : FC = () => {
     const compareStuff = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
                 const copyArr = newArr.slice();
-                copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1], "wrongText");
+                copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1], inpBoxSplit.length-1, "wrongText");
                 setIncorrectEntry(prevState => ++prevState);
                 setNewArr(copyArr);
             }
             else{
                 const copyArr = newArr.slice();
-                copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1], "normalText");
+                copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1],inpBoxSplit.length-1, "normalText");
                 setNewArr(copyArr);
             }
     };
@@ -54,6 +54,7 @@ const Main : FC = () => {
         setInpBoxSplit([]);
         setWordsPerMin(undefined);
         setAccuracy(0);
+        setDifficultyLevel(undefined);
         setIncorrectEntry(0);
         setTimeInSeconds(0);
         setElegibleToStart(false);
@@ -117,7 +118,7 @@ const Main : FC = () => {
     }, [displayVal]);
 
     useEffect(() => {
-        setNewArr(splitToArr.map(val => (AddSpan(val, "normalText"))));
+        setNewArr(splitToArr.map((val,index) => (AddSpan(val,index, "normalText"))));
     },[splitToArr]);
 
     useEffect(() => {
@@ -128,7 +129,7 @@ const Main : FC = () => {
     return (
         <div className={styles.container}>
             {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
-            <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/> 
+            {difficultyLevel === undefined && <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/>}
             {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}
             {!endTimer && eligibleToStart && <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>}
             {endTimer && displayResult()}
@@ -136,10 +137,10 @@ const Main : FC = () => {
     )
 }
 
-const AddSpan = (value: string, nameClass: string) => {
+const AddSpan = (value: string, index: number, nameClass: string) => {
     return(
         <>
-            <span className={nameClass === "normalText" ? styles.normalText : styles.wrongText}>{value}</span>
+            <span key={index} className={nameClass === "normalText" ? styles.normalText : styles.wrongText}>{value}</span>
         </>
     )
 }
