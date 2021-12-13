@@ -11,7 +11,7 @@ const MinuteButtons : FC<MinuteButtonsProps> = ({
 }) => {
     return (
         <div>
-            <button onClick={() => setTimeInSeconds(10)}>1</button>
+            <button onClick={() => setTimeInSeconds(60)}>1</button>
             <button onClick={() => setTimeInSeconds(120)}>2</button>
             <button onClick={() => setTimeInSeconds(180)}>3</button>
         </div>

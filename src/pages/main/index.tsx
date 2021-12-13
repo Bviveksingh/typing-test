@@ -70,7 +70,6 @@ const Main : FC = () => {
             <div>
                 <p>The words per minute written: {wordsPerMin}</p>
                 <p>Percentage Accuracy: {accuracy}%</p>
-                <button onClick={() => resetTest()}>Reset</button>
             </div>
         )
     };
@@ -134,6 +133,7 @@ const Main : FC = () => {
             {difficultyLevel === undefined && <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/>}
             {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}
             {!endTimer && eligibleToStart && <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>}
+            <button onClick={() => resetTest()}>Reset</button>
             {endTimer && displayResult()}
         </div>
     )
