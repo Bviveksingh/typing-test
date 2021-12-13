@@ -6,6 +6,7 @@ import InputBox from '../../components/inputBox';
 import { paragraphs } from '../../paragraphs';
 import DifficultyLevelButtons from '../../components/difficultyLevelButtons';
 import MinuteButtons from '../../components/setTimerButtons';
+import CreateSpanElements from '../../components/createSpanElements';
 
 const Main : FC = () => {
     const [startTimer, setStartTimer] = useState<boolean>(false);
@@ -31,13 +32,13 @@ const Main : FC = () => {
     const compareStuff = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
                 const copyArr = newArr.slice();
-                copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1], inpBoxSplit.length-1, "wrongText");
+                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass="wrongText"/>;
                 setIncorrectEntry(prevState => ++prevState);
                 setNewArr(copyArr);
             }
             else{
                 const copyArr = newArr.slice();
-                copyArr[inpBoxSplit.length - 1] = AddSpan(splitToArr[inpBoxSplit.length - 1],inpBoxSplit.length-1, "normalText");
+                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass="normalText"/>;
                 setNewArr(copyArr);
             }
     };
@@ -119,7 +120,7 @@ const Main : FC = () => {
     }, [displayVal]);
 
     useEffect(() => {
-        setNewArr(splitToArr.map((val,index) => (AddSpan(val,index, "normalText"))));
+        setNewArr(splitToArr.map((val,index) => <CreateSpanElements value={val} index={index} nameClass="normalText"/>));
     },[splitToArr]);
 
     useEffect(() => {
@@ -136,14 +137,6 @@ const Main : FC = () => {
             <button onClick={() => resetTest()}>Reset</button>
             {endTimer && displayResult()}
         </div>
-    )
-}
-
-const AddSpan = (value: string, index: number, nameClass: string) => {
-    return(
-        <>
-            <span key={index} className={nameClass === "normalText" ? styles.normalText : styles.wrongText}>{value}</span>
-        </>
     )
 }
 
