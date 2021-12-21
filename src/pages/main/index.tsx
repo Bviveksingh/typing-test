@@ -24,11 +24,8 @@ const Main : FC = () => {
     const [timeInSeconds, setTimeInSeconds] = useState<number>();
 
     const [difficultyLevel, setDifficultyLevel] = useState<number | undefined>();
-
-    const doEverything = (e: any) => {
-        setInputVal(e.target.value);
-    };
     
+    // Compare the input value entered with the paragraph and update the css and result accordingly
     const compareStuff = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
                 const copyArr = newArr.slice();
@@ -38,11 +35,12 @@ const Main : FC = () => {
             }
             else{
                 const copyArr = newArr.slice();
-                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass="normalText"/>;
+                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass="correctText"/>;
                 setNewArr(copyArr);
             }
     };
 
+    // Function that computes result and sets result fields
     const computeResult = () => {
         const result = (inputVal.length / 5) / minutes;
         const percentage = (((inputVal.length - incorrectEntry) / inputVal.length) * 100).toFixed(2);
@@ -102,6 +100,7 @@ const Main : FC = () => {
         }
     },[inputVal]);
 
+    // For every change in Input value trigger comparing function
     useEffect(() => {
         compareStuff();
     }, [inpBoxSplit]);
@@ -112,7 +111,7 @@ const Main : FC = () => {
             setElegibleToStart(true);
         }
     },[timeInSeconds,newArr]);
-
+    
     useEffect(() => {
         if(displayVal){
             setSplitToArr(displayVal.split(''));
@@ -130,11 +129,12 @@ const Main : FC = () => {
     },[startTimer, inpBoxSplit])
     return (
         <div className={styles.container}>
+            <p>Set Timer and Difficulty level before starting the test</p>
             {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
             {difficultyLevel === undefined && <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/>}
-            {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}
-            {!endTimer && eligibleToStart && <InputBox value={inputVal} onChange={(e) => doEverything(e)}/>}
-            <button onClick={() => resetTest()}>Reset</button>
+            {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}    
+            {!endTimer && eligibleToStart && <InputBox value={inputVal} onChange={(e) => setInputVal(e.target.value)}/>}
+            {inputVal.length > 0 && <button onClick={() => resetTest()}>Reset</button>} 
             {endTimer && displayResult()}
         </div>
     )

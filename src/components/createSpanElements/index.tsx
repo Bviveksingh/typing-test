@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 interface CreateSpanElementsProps{
     value: string;
     index: number;
-    nameClass: string;
+    nameClass?: string;
 }
 
 const CreateSpanElements : FC<CreateSpanElementsProps> = ({
@@ -12,8 +12,17 @@ const CreateSpanElements : FC<CreateSpanElementsProps> = ({
     index,
     nameClass
 }) => {
+    const getClassName = () => {
+        if(nameClass === "correctText"){
+            return styles.correctText;
+        }
+        else if(nameClass === "wrongText"){
+            return styles.wrongText;
+        }
+        return styles.normalText;
+    }
     return(
-        <span key={index} className={nameClass === "normalText" ? styles.normalText : styles.wrongText}>{value}</span>
+        <span key={index} className={getClassName()}>{value}</span>
     )
 }
 
