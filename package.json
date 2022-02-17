@@ -23,7 +23,8 @@
     "build": "CI=false && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier": "prettier --single-quote --write src/**/*{ts,tsx,css} && tsc"
+    "prettier": "prettier --single-quote --write src/**/*{ts,tsx,css} && tsc",
+    "deploy": "yarn run build && aws s3 cp build/ s3://notsofunwebsite.com --recursive"
   },
   "eslintConfig": {
     "extends": [
