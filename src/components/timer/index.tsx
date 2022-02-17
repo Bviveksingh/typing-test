@@ -25,6 +25,7 @@ const Timer : FC<TimerProps> = ({
                 minutes = minutes.toString().length === 1 ? "0" + minutes : minutes;
                 seconds = seconds.toString().length === 1 ? "0" + seconds : seconds;
                 setReadableFormat(minutes + ':' + seconds);
+                console.log(seconds);
             }, 1000);
         }
         if(counterInSeconds === 0){
