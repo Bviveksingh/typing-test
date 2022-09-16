@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import styles from './styles.module.css';
 
+type nameClassType = 0 | 1 | -1;
 interface CreateSpanElementsProps{
     value: string;
     index: number;
-    nameClass?: string;
+    nameClass?: nameClassType;
 }
 
 const CreateSpanElements : FC<CreateSpanElementsProps> = ({
@@ -13,12 +14,12 @@ const CreateSpanElements : FC<CreateSpanElementsProps> = ({
     nameClass
 }) => {
     const getClassName = () => {
-        if(nameClass === "correctText"){
+        if(nameClass === 1){
             return styles.correctText;
         }
-        else if(nameClass === "wrongText"){
+        else if(nameClass === -1){
             return styles.wrongText;
-        }
+        }   
         return styles.normalText;
     }
     return(

@@ -1,9 +1,9 @@
-import React, { FC } from 'react'
+import React, { ChangeEvent, FC } from 'react'
 
 
 interface InputBoxProps{
     value: string | undefined;
-    onChange: (e:any) => void;
+    onChange: (e:ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputBox : FC<InputBoxProps> = ({

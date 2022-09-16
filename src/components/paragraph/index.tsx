@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import ReactHtmlParser from 'react-html-parser';
 import styles from './paragraph.module.css';
 
 interface ParagraphProps{

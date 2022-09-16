@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
 
+type difficultyLevelType = 0 | 1 | 2;
 
-
-interface DifficultyLevelButtonsProps{
-    setDifficultyLevel: (value: number) => void;
+interface DifficultyLevelProps{
+    setDifficultyLevel: (value: difficultyLevelType) => void;
 }
 
 
-const DifficultyLevelButtons : FC<DifficultyLevelButtonsProps> = ({
+const DifficultyLevel : FC<DifficultyLevelProps> = ({
     setDifficultyLevel
 }) => {
     return(
@@ -19,4 +19,4 @@ const DifficultyLevelButtons : FC<DifficultyLevelButtonsProps> = ({
     )
 } ;
 
-export default DifficultyLevelButtons;
+export default DifficultyLevel;

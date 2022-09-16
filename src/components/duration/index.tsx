@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 
-interface MinuteButtonsProps{
-    setTimeInSeconds: (value: number) => void;
+type timeInSecondsType = 60 | 120 | 180;
+
+interface DurationProps{
+    setTimeInSeconds: (value: timeInSecondsType) => void;
 }
 
 
 
-const MinuteButtons : FC<MinuteButtonsProps> = ({
+const Duration : FC<DurationProps> = ({
     setTimeInSeconds
 }) => {
     return (
@@ -18,4 +20,4 @@ const MinuteButtons : FC<MinuteButtonsProps> = ({
     )
 }
 
-export default MinuteButtons;
+export default Duration;

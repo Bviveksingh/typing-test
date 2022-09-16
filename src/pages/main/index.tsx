@@ -4,41 +4,41 @@ import styles from './main.module.css';
 import Timer from '../../components/timer';
 import InputBox from '../../components/inputBox';
 import { paragraphs } from '../../paragraphs';
-import DifficultyLevelButtons from '../../components/difficultyLevelButtons';
-import MinuteButtons from '../../components/setTimerButtons';
+import DifficultyLevel from '../../components/difficultyLevel';
+import Duration from '../../components/duration';
 import CreateSpanElements from '../../components/createSpanElements';
 
 const Main : FC = () => {
-    const [startTimer, setStartTimer] = useState<boolean>(false);
-    const [endTimer, setEndTimer] = useState<boolean>(false);
-    const [eligibleToStart, setElegibleToStart] = useState<boolean>(false);
-    const [inputVal, setInputVal] = useState<string>('');
+    const [startTimer, setStartTimer] = useState<boolean>(false); 
+    const [endTimer, setEndTimer] = useState<boolean>(false); 
+    const [eligibleToStart, setEligibleToStart] = useState<boolean>(false); 
+    const [inputVal, setInputVal] = useState<string>(''); 
     const [displayVal, setDisplayVal] = useState<string>('');
-    const [splitToArr, setSplitToArr] = useState<string[]>([]);
-    const [newArr, setNewArr] = useState<JSX.Element[]>([]);
-    const [inpBoxSplit, setInpBoxSplit] = useState<string[]>([]);
+    const [splitToArr, setSplitToArr] = useState<string[]>([]); 
+    const [paragraphArr, setParagraphArr] = useState<JSX.Element[]>([]); 
+    const [inpBoxSplit, setInpBoxSplit] = useState<string[]>([]); 
     const [wordsPerMin, setWordsPerMin] = useState<number | undefined>();
     const [minutes, setMinutes] = useState<number>(1);
     const [incorrectEntry, setIncorrectEntry] = useState<number>(0);
     const [accuracy, setAccuracy] = useState<number>(0);
-    const [timeInSeconds, setTimeInSeconds] = useState<number>();
-
-    const [difficultyLevel, setDifficultyLevel] = useState<number | undefined>();
+    const [timeInSeconds, setTimeInSeconds] = useState<number>(); 
+    const [difficultyLevel, setDifficultyLevel] = useState<number | undefined>(); 
     
     // Compare the input value entered with the paragraph and update the css and result accordingly
-    const compareStuff = () => {
+    const compare = () => {
             if(inpBoxSplit[inpBoxSplit.length - 1] !== splitToArr[inpBoxSplit.length - 1]){
-                const copyArr = newArr.slice();
-                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass="wrongText"/>;
+                const copyArr = paragraphArr.slice();
+                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass={-1} />;
                 setIncorrectEntry(prevState => ++prevState);
-                setNewArr(copyArr);
+                setParagraphArr(copyArr);
             }
             else{
-                const copyArr = newArr.slice();
-                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass="correctText"/>;
-                setNewArr(copyArr);
+                const copyArr = paragraphArr.slice();
+                copyArr[inpBoxSplit.length - 1] = <CreateSpanElements value={splitToArr[inpBoxSplit.length - 1]} index={inpBoxSplit.length-1} nameClass={1} />;
+                setParagraphArr(copyArr);
             }
     };
+
 
     // Function that computes result and sets result fields
     const computeResult = () => {
@@ -46,7 +46,6 @@ const Main : FC = () => {
         const percentage = (((inputVal.length - incorrectEntry) / inputVal.length) * 100).toFixed(2);
         setWordsPerMin(result);
         setAccuracy(parseFloat(percentage));
-
     }
 
     const resetTest = () => {
@@ -58,12 +57,11 @@ const Main : FC = () => {
         setDifficultyLevel(undefined);
         setIncorrectEntry(0);
         setTimeInSeconds(0);
-        setElegibleToStart(false);
+        setEligibleToStart(false);
         setDisplayVal('');
         setSplitToArr([]);
     }
 
-    
     const displayResult = () => {
         return(
             <div>
@@ -86,6 +84,7 @@ const Main : FC = () => {
         setStartTimer(false);
         setEndTimer(true);
     }
+
     useEffect(() => {
         if(inputVal){
             const x =  inputVal.split('');
@@ -102,15 +101,16 @@ const Main : FC = () => {
 
     // For every change in Input value trigger comparing function
     useEffect(() => {
-        compareStuff();
+        compare();
     }, [inpBoxSplit]);
 
     //Show the input box only when the user has set the timer and difficulty level
+    /*----DONE---*/
     useEffect(() => {
-        if(timeInSeconds && newArr.length > 0){
-            setElegibleToStart(true);
+        if(timeInSeconds && paragraphArr.length > 0){
+            setEligibleToStart(true);
         }
-    },[timeInSeconds,newArr]);
+    },[timeInSeconds,paragraphArr]);
     
     useEffect(() => {
         if(displayVal){
@@ -119,7 +119,7 @@ const Main : FC = () => {
     }, [displayVal]);
 
     useEffect(() => {
-        setNewArr(splitToArr.map((val,index) => <CreateSpanElements value={val} index={index} nameClass="normalText"/>));
+        setParagraphArr(splitToArr.map((val,index) => <CreateSpanElements value={val} index={index} nameClass={0}/>));
     },[splitToArr]);
 
     useEffect(() => {
@@ -130,12 +130,13 @@ const Main : FC = () => {
     return (
         <div className={styles.container}>
             <p>Set Timer and Difficulty level before starting the test</p>
-            {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <MinuteButtons setTimeInSeconds={setTime}/>}
-            {difficultyLevel === undefined && <DifficultyLevelButtons setDifficultyLevel={setDifficulty}/>}
-            {newArr.length > 0 && <Paragraph value={newArr.length > 0 ? newArr : [] }/>}    
+            {timeInSeconds as number > 0 ? <Timer timeInSeconds={timeInSeconds as number} startTimer={startTimer} endTimerFunc={endTimerFunc}/> : <Duration setTimeInSeconds={setTime}/>}
+            {difficultyLevel === undefined && <DifficultyLevel setDifficultyLevel={setDifficulty}/>}
+            {paragraphArr.length > 0 && <Paragraph value={paragraphArr.length > 0 ? paragraphArr : [] }/>}    
             {!endTimer && eligibleToStart && <InputBox value={inputVal} onChange={(e) => setInputVal(e.target.value)}/>}
             {inputVal.length > 0 && <button onClick={() => resetTest()}>Reset</button>} 
             {endTimer && displayResult()}
+
         </div>
     )
 }
